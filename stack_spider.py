@@ -2,7 +2,9 @@ from scrapy import Spider
 from scrapy.selector import Selector
 import scrapy
 from stack.items import StackItem
-from stack.index import value
+from tkinter import *
+from tkinter import ttk
+from tkinter import Tk
 
 class StackSpider(scrapy.Spider):
     name = "stack"
@@ -10,7 +12,6 @@ class StackSpider(scrapy.Spider):
     start_urls = [
         "http://stackoverflow.com/questions?pagesize=50&sort=newest",
     ]
-    
     def __init__(self, value='', *args, **kwargs):
         super(StackSpider, self).__init__(*args, **kwargs)
         self.search_value = value
@@ -43,10 +44,10 @@ class StackSpider(scrapy.Spider):
                     count += 1
                     yield {
                         'counter': self.counter,
+                        'search_value': self.search_value,
                     }
 
             else:
                 self.log(f"Missing title or url in question: {question.extract()}")
 
-            print("Count:", count)
-            print(value)     
+            print("Count:", count)   
