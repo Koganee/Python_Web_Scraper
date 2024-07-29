@@ -9,6 +9,7 @@ MONGODB_SERVER = "localhost"
 MONGODB_PORT = 27017
 MONGODB_DB = "stackoverflow"
 MONGODB_COLLECTION = "questions"
+MONGODB_COLLECTION2 = "words"
 
 def getWord():                                                          #Function for getting word
     searchValue = inputWord.get()
@@ -49,6 +50,10 @@ def findMostCommonWords(searchValue):
         client = pymongo.MongoClient(MONGODB_SERVER, MONGODB_PORT)
         db = client[MONGODB_DB]
         collection = db[MONGODB_COLLECTION]
+        #collection2 = db[MONGODB_COLLECTION2]
+
+        db[MONGODB_COLLECTION2].drop()
+        collection2 = db[MONGODB_COLLECTION2]
 
         word_counts = {}
         listWords = []
@@ -67,9 +72,12 @@ def findMostCommonWords(searchValue):
                 else:
                     word_counts[word] += 1
         for word, count in word_counts.items():
-            print(f"'{word}': {count}") 
+            print(f"'{word}': {count}")
+            stuffToAdd = {"word": word, "count": count}
+            collection2.insert_one(stuffToAdd)
             #print(f"'{searchValue}': {count}")                 
     finally:
+        #print(collection2.get("word", searchValue))
         # Close the connection
         client.close()
 
